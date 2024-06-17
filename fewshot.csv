@@ -1,0 +1,36 @@
+Question,Cypher
+"What is the average score of all students in Math?
+","MATCH (s:Student)-[r:HAS_SCORE]->(sub:Subject {name: "Math"})
+RETURN avg(r.score) AS average_score"
+"Who scored the highest in Science?
+","MATCH (s:Student)-[r:HAS_SCORE]->(sub:Subject {name: "Science"})
+WITH s, max(r.score) AS max_score
+WHERE r.score = max_score
+RETURN s.name AS student_name, max_score AS highest_score"
+"Which student scored the lowest in History?
+","MATCH (s:Student)-[r:HAS_SCORE]->(sub:Subject {name: "History"})
+WITH s, min(r.score) AS min_score
+WHERE r.score = min_score
+RETURN s.name AS student_name, min_score AS lowest_score"
+"What is the total score of Alice in all subjects?
+","MATCH (s:Student {name: "Alice"})-[r:HAS_SCORE]->(sub:Subject)
+RETURN sum(r.score) AS total_score"
+"Who scored above 80 in English?
+","MATCH (s:Student)-[r:HAS_SCORE]->(sub:Subject {name: "English"})
+WHERE r.score > 80
+RETURN s.name AS student_name, r.score AS score"
+"Which subject has the highest average score among all students?
+","MATCH (s:Student)-[r:HAS_SCORE]->(sub:Subject)
+RETURN sub.name AS subject_name, avg(r.score) AS average_score
+ORDER BY average_score DESC
+LIMIT 1"
+"How many students scored below 70 in Physics?
+","MATCH (s:Student)-[r:HAS_SCORE]->(sub:Subject {name: "Physics"})
+WHERE r.score < 70
+RETURN count(DISTINCT s) AS num_students"
+"Which student has the highest overall score across all subjects?
+","MATCH (s:Student)-[r:HAS_SCORE]->(sub:Subject)
+WITH s, sum(r.score) AS total_score
+ORDER BY total_score DESC
+LIMIT 1
+RETURN s.name AS student_name, total_score AS highest_total_score"
